@@ -1,12 +1,12 @@
 import { Router } from 'express'
 import * as usersController from '../controllers/usersController.js'
-import { authToken } from '../middlewares/autentication.middleware.js'
+import { authToken, verifyCredential } from '../middlewares/index.middlewares.js'
 
 const router = Router()
 
-router.post('/usuarios', usersController.register)
+router.post('/usuarios', verifyCredential, usersController.register)
 router.post('/login', usersController.login)
-router.get('/perfil', authToken, usersController.findProfile)
+router.get('/usuarios', authToken, usersController.findProfile)
 router.all('*', usersController.notFound)
 
 export default router
