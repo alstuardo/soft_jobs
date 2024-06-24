@@ -46,8 +46,19 @@ export const login = (req, res) => {
     })
 }
 
-export const findProfile = (req, res) => sql.findProfile(req.user.email)
-  .then((result) => res.status(200).json(result))
-  .catch((error) => res.status(500).json({ status: false, code: 500, message: error }))
+export const findProfile = (req, res) => {
+  const { email } = req.user
+
+  sql.findProfile(email)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ status: false, code: 404, message: 'Perfil de usuario no encontrado' })
+      }
+      res.status(200).json(user)
+    })
+    .catch((error) => {
+      res.status(500).json({ status: false, code: 500, message: error.message })
+    })
+}
 
 export const notFound = (_, res) => res.status(404).json({ status: false, code: 404, message: 'Page not found' })
